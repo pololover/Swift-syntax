@@ -31,4 +31,69 @@
 - 프로토콜은 특정 역할을 하기 위한 요구사항들의 청사진이다. 자격증으로 이해하고 내부에 구현된 것들은 요구사항이라고 본다.
 - AnyObject타입은 사실 프로토콜이다. 클래스의 인스턴스들만 담을 수 있는 프로토콜이며 이 프로토콜을 새로운 프로토콜에 상속한다면 클래스의 인스턴스들만 채택할 수 있는 프로토콜이 되는 것이다.
 
+#### 프로토콜의 확장
+- 프로토콜을 채택하는 클래스, 구조체들이 많아질수록 프로토콜을 직접 구현해야하는 일이 생긴다. 이 떄문에 확장개념을 사용해 기본값을 제공해서 직접 구현하는 일을 줄여줄 수가 있다. 하지만 확장 할 때 주의 점들이 몇 가지 존재한다.
+1. 프로토콜의 요구사항에 있는 함수들은 클래스에서 새롭게 정의한 함수들보다 우선순위가 낮다. 
+
+```swift
+protocol smile {
+    func smiling()
+}
+
+extension smile {
+    func smiling() {
+        print("확장 문법이 웃는다.")
+    }
+}
+
+class A: smile {
+    func smiling() {
+        print("A가 웃는다.")
+    }
+}
+
+var a = A()
+a.smiling() // output: A가 웃는다
+```
+
+2. 프로토콜 요구사항에 있는 것이 아닌 경우(확장에서 정의된 메서드) 인스턴스 타입에 해당하는 메서드를 호출한다.
+```swift
+protocol smile {
+    func smiling()
+}
+
+extension smile {
+    func smiling() {
+        print("확장 문법이 웃는다.")
+    }
+    
+    func doSomething() {
+        print("확장 문법에서 실행")
+    }
+}
+
+class A: smile {
+    func smiling() {
+        print("A가 웃는다.")
+    }
+    
+    func doSomething() {
+        print("A클래스에서 실행")
+    }
+}
+
+var a: smile = A()
+a.doSomething()  // output: 확장 문법에서 실행
+var aClass: A = A()
+aClass.doSomething() // output: A클래스에서 실행
+```
+
+#### 프로토콜 확장 메모리 관점
+확장된 프로토콜을 채택한 클래스는 데이터 영역의 Virtual Table에 저장이 된다. 이는 클래스에서 메서드를 저장하는 방식으로, 인스턴스를 생성해 채택한 프로토콜의 메서드를 참조한다면 Virtual Table에 있는 메서드를 호출하게 된다. 그와 동시에 프로토콜을 채택하기 때문에 별도로 witness table을 생성한다. 이 공간은 생성된 인스턴스의 타입이 프로토콜타입일 때 가리키게 된다.
+
+구조체는 클래스와 다르게 Virtual Table이 생성되지 않는다. 즉 각각의 메서드들이 direct dispatch형태로 직접 저장하고 있는 것이다. 구조체도 마찬가지로 witness테이블을 프로토콜을 채택함과 동시에 생성하며 인스턴스 타입에 따라서 호출되는 메서드의 주소가 달라진다.
+
+
+
+
 
