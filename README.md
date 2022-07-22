@@ -16,6 +16,16 @@
 - 화면에 보여지는 UI(스토리보드)는 View폴더에 정의
 - 버튼클릭에 의한 작동, Model과 View사이 중간역할을 해주는 부분은 Controller에 정의
 
+#### 코드만으로 View를 작성한 MVC패턴
+- 코드만으로 View를 구성하는 방법은 일반적으로 두 가지. (2번의 방법을 살펴본다)
+1. ViewController에 전부 넣는다.
+2. View영역에 UI에 해당하는 부분을 전부 넣는다. 
+- View폴더에 View에 해당하는 파일을 정의한다.
+- UIView를 상속하는 클래스 변수를 생성한다.
+- UI코드들을 전부 담은 뒤 override init으로 생성자를 호출한다.(필수 생성자도 호출해야함)
+- ViewController부분에서 정의한 UIView을 인스턴스화 한 뒤, LoadView함수를 재정의 해 기존의 view를 대체한다.
+- 버튼과 같은 UI에 연결된 메서드들을 addTarget시켜준다. 
+  
 ## Syntax
 
 ### 💡 열거형
